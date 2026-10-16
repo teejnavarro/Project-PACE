@@ -1,0 +1,20 @@
+{#
+  offer_type: STORE COUPON
+  where_condition: cast(a.store_id as string) = b.store_id
+  reserved_aliases: b
+
+  Joins the coupon_store_validity table to get published offer details.
+  The subquery alias is "b" — used in the WHERE condition above.
+
+  Available variables:
+    {{ tables.coupon_store_validity }}  — fully-qualified table path
+    {{ offer_clause }}                  — formatted offer ID filter (= 'X' or IN ('X','Y'))
+#}
+JOIN
+     (
+          SELECT offer_id, catalog_offer_id, store_id, PROGRAM_CD
+          FROM {{ tables.coupon_store_validity }} WHERE status = 'Published'
+          AND offer_id {{ offer_clause }}
+          GROUP BY 1,2,3,4
+     ) AS b
+ON cast(a.store_id AS string) = b.store_id

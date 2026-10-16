@@ -1,0 +1,49 @@
+# rcs/config/optional_columns.yaml
+# Per-row optional fields for RCS campaigns. Shape matches push/config/optional_columns.yaml.
+#
+# The nested cards[] and buttons[] structure (per row) is NOT declared here — that
+# is modeled programmatically because it varies by offer type (CHOICE/CARD/CAROUSEL).
+# This file holds only scalar row-level optional fields.
+
+optional_columns:
+  # Business-unit / campaign-code prefix (e.g. region-promo_, loyalty-crm_).
+  # Populated by CRF import; ends in underscore per RCS convention.
+  - name: bu_cc_id
+    label: "BU_CC_ID"
+    sql_alias: BU_CC_ID
+    sql_type: text
+    sql_managed: hardcoded
+    sql_escape: false
+    ui_visible: true
+    help: "Business-unit / campaign-code prefix. Must end in an underscore (e.g. `region-promo_`)."
+
+  # Fallback message body for RCS delivery failures — SMS fallback text.
+  # Always prefixed with '[BANNER]: ' at render time.
+  - name: fallback_message_body
+    label: "FALLBACK_MESSAGE_BODY"
+    sql_alias: FALLBACK_MESSAGE_BODY
+    sql_type: text
+    sql_managed: hardcoded
+    sql_escape: true
+    ui_visible: true
+    help: "SMS fallback text if RCS delivery fails. `[BANNER]:` prefix is added automatically at export time."
+
+  # Optional app-store deep link flag
+  - name: to_app_store
+    label: "TO_APP_STORE"
+    sql_alias: TO_APP_STORE
+    sql_type: bool
+    sql_managed: hardcoded
+    sql_escape: false
+    ui_visible: true
+    help: "Set TRUE to route the deep-link through the app store. Defaults to FALSE."
+
+  # Canonical campaign ID for downstream tracking
+  - name: canonical_campaign_id
+    label: "CANONICALCAMPAIGNID"
+    sql_alias: CANONICALCAMPAIGNID
+    sql_type: text
+    sql_managed: hardcoded
+    sql_escape: false
+    ui_visible: true
+    help: "Optional canonical campaign identifier for downstream tracking."

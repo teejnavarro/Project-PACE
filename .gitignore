@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+.venv-*/
+venv/
+.pytest_cache/
+
+# Rotating save backups and soft-deleted campaigns (local recovery only)
+**/data/_backups/
+**/data/_trash/
+
+# Generated exports
+exports/
+sql_exports/
+
+# Campaign data (may contain business-sensitive info)
+data/*.json
+push/data/*.json
+rcs/data/*.json
+archive/data_legacy_pre-rcs/
+
+# Backup files
+app/*.bak
+app/*.bak2
+app/*.bak3
+
+# VS Code
+.vscode/
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store

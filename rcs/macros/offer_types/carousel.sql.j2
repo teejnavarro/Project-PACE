@@ -1,0 +1,122 @@
+{# rcs/macros/offer_types/carousel.sql.j2
+   Renders one RCS CAROUSEL campaign INSERT (2-7 cards + 3 general buttons).
+   Context vars: row (dict), tables, send_day_upper.
+   The TEMPLATE column value bakes in the card count: RCS_CAROUSEL_{N}_CARDS_THEME.
+   N is taken from row.carousel_card_count (dropdown 2-7).
+
+   PRODUCTION-CRITICAL NOTES (do not remove):
+   - TEMPLATE = 'RCS_CAROUSEL_{N}_CARDS_THEME' where N MUST match the number of cards being used.
+   - The MESSAGE_FOOTER_N value ' Txt STOP 2 end' MUST keep its leading space (all cards).
+   - Empty cards still get MESSAGE_FOOTER_N = '' (blank string, not the STOP value).
+   - GENERAL_BUTTON_* columns apply to ALL cards in the carousel (not per-card).
+   - The CMPID CASE expression is included from _cmpid_case.sql.j2 and MUST NOT be edited.
+   - The FALLBACK_MESSAGE_BODY must be prefixed with '[BANNER]: ' even if the CRF omits it.
+   - The AND s.phone_number NOT IN (...) dedupe is scoped to THIS script only.
+
+   RCS shares nothing at runtime with PUSH's campaign_insert.sql.j2 — it only inherits
+   the file layout convention (offer_types/*.sql.j2). Treat RCS templates independently.
+#}
+{% set target_table = tables.rcs_adhoc_base ~ '.' ~ send_day_upper ~ tables.rcs_adhoc_suffix -%}
+{%- set card_count = row.carousel_card_count if row.carousel_card_count else (row.cards|length) -%}
+{%- set _cards = row.cards[:7] -%}
+{%- set _gb = row.general_buttons[:3] -%}
+{%- macro esc(s) -%}{{ (s | default('', true)) | replace("'", "\\'") }}{%- endmacro -%}
+{%- macro card_columns(n) -%}
+MESSAGE_FOOTER_{{ n }},MESSAGE_BODY_{{ n }},MEDIA_TITLE_{{ n }},MEDIA_URL_{{ n }},FIRST_BUTTON_TITLE_{{ n }},FIRST_BUTTON_VALUE_{{ n }},FIRST_BUTTON_SSO_URL_{{ n }},FIRST_BUTTON_PUSH_SECTION_{{ n }},SECOND_BUTTON_TITLE_{{ n }},SECOND_BUTTON_VALUE_{{ n }},SECOND_BUTTON_SSO_URL_{{ n }},SECOND_BUTTON_PUSH_SECTION_{{ n }},THIRD_BUTTON_TITLE_{{ n }},THIRD_BUTTON_VALUE_{{ n }},THIRD_BUTTON_SSO_URL_{{ n }},THIRD_BUTTON_PUSH_SECTION_{{ n }},FOURTH_BUTTON_TITLE_{{ n }},FOURTH_BUTTON_VALUE_{{ n }},FOURTH_BUTTON_SSO_URL_{{ n }},FOURTH_BUTTON_PUSH_SECTION_{{ n }}
+{%- endmacro -%}
+{%- macro card_values(n, c) -%}
+{%- set footer = c._sql_footer -%}
+{%- set b1 = c.buttons[0] -%}
+{%- set b2 = c.buttons[1] -%}
+{%- set b3 = c.buttons[2] -%}
+{%- set b4 = c.buttons[3] -%}
+
+--CARD {{ n }}
+{% if n == 1 -%}
+'{{ footer }}' AS MESSAGE_FOOTER_{{ n }}, --never change this including the extra space in the front
+{% else -%}
+'{{ footer }}' AS MESSAGE_FOOTER_{{ n }}, --toggled by the MESSAGE_FOOTER_{{ n }} checkbox; include the leading space when on
+{% endif -%}
+'{{ esc(c.body) }}' AS MESSAGE_BODY_{{ n }},
+'{{ esc(c.media_title) }}' AS MEDIA_TITLE_{{ n }},
+'{{ esc(c.media_url) }}' AS MEDIA_URL_{{ n }},
+'{{ esc(b1.title) }}' AS FIRST_BUTTON_TITLE_{{ n }},
+{{ b1._sql_value }} AS FIRST_BUTTON_VALUE_{{ n }},
+{{ b1._sql_sso_url }} AS FIRST_BUTTON_SSO_URL_{{ n }},
+'{{ esc(b1.push_section) }}' AS FIRST_BUTTON_PUSH_SECTION_{{ n }},
+'{{ esc(b2.title) }}' AS SECOND_BUTTON_TITLE_{{ n }},
+{{ b2._sql_value }} AS SECOND_BUTTON_VALUE_{{ n }},
+{{ b2._sql_sso_url }} AS SECOND_BUTTON_SSO_URL_{{ n }},
+'{{ esc(b2.push_section) }}' AS SECOND_BUTTON_PUSH_SECTION_{{ n }},
+'{{ esc(b3.title) }}' AS THIRD_BUTTON_TITLE_{{ n }},
+{{ b3._sql_value }} AS THIRD_BUTTON_VALUE_{{ n }},
+{{ b3._sql_sso_url }} AS THIRD_BUTTON_SSO_URL_{{ n }},
+'{{ esc(b3.push_section) }}' AS THIRD_BUTTON_PUSH_SECTION_{{ n }},
+'{{ esc(b4.title) }}' AS FOURTH_BUTTON_TITLE_{{ n }},
+{{ b4._sql_value }} AS FOURTH_BUTTON_VALUE_{{ n }},
+{{ b4._sql_sso_url }} AS FOURTH_BUTTON_SSO_URL_{{ n }},
+'{{ esc(b4.push_section) }}' AS FOURTH_BUTTON_PUSH_SECTION_{{ n }}
+{%- endmacro -%}
+
+--======================================================================
+-- CAROUSEL ({{ card_count }} cards) :: {{ row.campaign_name }}
+--======================================================================
+--CAROUSEL TEMPLATE
+set BU_CC_ID = '{{ esc(row.bu_cc_id) }}';
+set theme = '{{ esc(row.theme) }}';
+set channelsubtype = 'CAROUSEL';
+set priority = {{ row.priority }};
+
+{{ row.targeting_notes_comment }}INSERT INTO {{ target_table }}
+(WEEK_ID,SEND_DAY,SEND_DATE,HOUSEHOLD_ID,RETAIL_CUSTOMER_UUID,PHONE_NUMBER,CMPID,STORE_BANNER,TEMPLATE,PRIORITY,THEME,STORE_ID,DIVISION_ID,SEND_DATE_TIME,CHANNEL,CHANNEL_SUB_TYPE,TIMEZONE,MESSAGE_HEADER_1,{% for n in range(1, 8) %}{{ card_columns(n) }}{% if not loop.last %},{% endif %}{% endfor %},GENERAL_BUTTON_TITLE_1,GENERAL_BUTTON_TITLE_2,GENERAL_BUTTON_TITLE_3,GENERAL_BUTTON_VALUE_1,GENERAL_BUTTON_VALUE_2,GENERAL_BUTTON_VALUE_3,GENERAL_BUTTON_SSO_URL_1,GENERAL_BUTTON_SSO_URL_2,GENERAL_BUTTON_SSO_URL_3,GENERAL_BUTTON_PUSH_SECTION_1,GENERAL_BUTTON_PUSH_SECTION_2,GENERAL_BUTTON_PUSH_SECTION_3,FALLBACK_MESSAGE_BODY,TO_APP_STORE,STORE_STATE,CANONICALCAMPAIGNID)
+SELECT
+  weekid AS week_id, --not part of file output table but required
+  sendday AS send_day, --not part of file output table but required
+  senddate AS send_date, --not part of file output table but required
+  s.HOUSEHOLD_ID,
+  s.RETAIL_CUSTOMER_UUID,
+  s.PHONE_NUMBER, -- NEVER change the CMPID case statement on the row below
+  {% include '_cmpid_case.sql.j2' %},
+  s.STORE_BANNER,
+'RCS_CAROUSEL_{{ card_count }}_CARDS_THEME' AS TEMPLATE, --update with the number of cards being used
+  priority AS PRIORITY,
+  theme as THEME,
+  s.STORE_ID,
+  s.DIVISION_ID,
+CASE WHEN senddate IS NOT NULL AND default_send_time IS NOT NULL THEN DATETIME(senddate, CAST(default_send_time AS TIME)) ELSE NULL END AS SEND_DATE_TIME, --NEVER CHANGE THIS CASE STATEMENT
+'RCS' AS CHANNEL, --never change this
+  channelsubtype AS CHANNEL_SUB_TYPE,
+  s.TIMEZONE,'' AS MESSAGE_HEADER_1, --leave these two columns together
+
+{% for c in _cards %}{{ card_values(loop.index, c) }}{% if not loop.last %},
+{% endif %}{% endfor %},
+
+--Applies to ALL Cards
+'{{ esc(_gb[0].title) }}' AS GENERAL_BUTTON_TITLE_1,
+'{{ esc(_gb[1].title) }}' AS GENERAL_BUTTON_TITLE_2,
+'{{ esc(_gb[2].title) }}' AS GENERAL_BUTTON_TITLE_3,
+{{ _gb[0]._sql_value }} AS GENERAL_BUTTON_VALUE_1,
+{{ _gb[1]._sql_value }} AS GENERAL_BUTTON_VALUE_2,
+{{ _gb[2]._sql_value }} AS GENERAL_BUTTON_VALUE_3,
+{{ _gb[0]._sql_sso_url }} AS GENERAL_BUTTON_SSO_URL_1,
+{{ _gb[1]._sql_sso_url }} AS GENERAL_BUTTON_SSO_URL_2,
+{{ _gb[2]._sql_sso_url }} AS GENERAL_BUTTON_SSO_URL_3,
+'{{ esc(_gb[0].push_section) }}' AS GENERAL_BUTTON_PUSH_SECTION_1,
+'{{ esc(_gb[1].push_section) }}' AS GENERAL_BUTTON_PUSH_SECTION_2,
+'{{ esc(_gb[2].push_section) }}' AS GENERAL_BUTTON_PUSH_SECTION_3,
+
+--include the [BANNER] placeholder even if the CRF doesn't include it
+'[BANNER]: {{ esc(row.fallback_message_body) }}' AS FALLBACK_MESSAGE_BODY,
+{{ 'TRUE' if row.to_app_store else 'FALSE' }} as TO_APP_STORE, --default is 'false'
+STORE_STATE,
+'{{ esc(row.canonical_campaign_id) }}' AS CANONICALCAMPAIGNID
+
+--Tables
+FROM {{ tables.sms_population }} s
+{% if row.custom_joins_sql %}{{ row.custom_joins_sql }}
+{% endif %}WHERE {{ row.targeting_where }}
+
+--Not in the same day's send (this script only)
+AND s.phone_number NOT IN (SELECT phone_number FROM {{ target_table }} GROUP BY ALL)
+GROUP BY ALL
+;

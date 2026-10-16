@@ -1,0 +1,103 @@
+﻿# config/optional_columns.yaml
+# Single source of truth for optional campaign INSERT columns.
+#
+# To add a new column at the end of the SELECT list:
+#   1. Append an entry here (sql_managed: loop is the default)
+#   2. Done - UI field, row default, and SQL output update automatically.
+#
+# Schema:
+#   name         - row dict key and Jinja2 variable name
+#   sql_alias    - SQL column alias (defaults to name if omitted)
+#   sql_escape   - true if apostrophe-escaping needed in SQL (default: false)
+#   sql_type     - "text" (default) | "bool" | "static"
+#   sql_expr     - raw SQL fragment for sql_type: static entries (no '...' wrapper)
+#   sql_managed  - "loop" (default, rendered via for-loop) | "hardcoded" (already in template header)
+#   ui_visible   - false to hide from Optional Fields UI (default: true)
+#   label        - UI display label (defaults to name)
+#   help         - optional tooltip shown in the UI field
+
+optional_columns:
+  # -- Hardcoded in template (position-sensitive) --
+  - name: media_url
+    sql_managed: hardcoded
+    sql_escape: true
+    label: media_url
+    help: "Media URL for rich push image."
+
+  - name: media_type
+    sql_managed: hardcoded
+    ui_visible: false
+
+  - name: pushlinks
+    sql_managed: hardcoded
+    ui_visible: false
+
+  - name: pushsection
+    sql_managed: hardcoded
+    sql_escape: true
+    sql_alias: PUSHSECTION
+    label: pushsection
+
+  # -- Loop-rendered (order controls SQL output order) --
+  - name: param_q
+    sql_escape: true
+    label: param_q
+    help: "Deep-link query param. No underscores allowed."
+
+  - name: screentitle
+    sql_escape: true
+    label: screentitle
+    help: "Screen title. No dashes allowed."
+
+  - name: gameid
+    label: gameid
+
+  - name: product
+    label: product
+
+  - name: searchterm
+    label: searchterm
+
+  - name: store
+    label: store
+
+  - name: seller
+    label: seller
+
+  - name: category
+    label: category
+
+  - name: program
+    label: program
+
+  - name: pagname
+    label: pagname
+
+  - name: datasource
+    label: datasource
+
+  - name: modelconfigid
+    label: modelconfigid
+
+  - name: update_dt
+    sql_type: static
+    sql_expr: "cast(CURRENT_DATE AS timestamp) as  update_dt"
+    ui_visible: false
+
+  - name: partnerid
+    label: partnerid
+
+  - name: subtitle
+    sql_escape: true
+    label: subtitle
+
+  - name: autoimage
+    sql_type: bool
+    label: autoimage
+    help: "Set to true/false or leave blank (NULL)."
+   
+  - name: eventid       
+    label: eventid
+    
+  - name: CANONICALCAMPAIGNID
+    label: CANONICALCAMPAIGNID

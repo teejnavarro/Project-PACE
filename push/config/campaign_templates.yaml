@@ -1,0 +1,31 @@
+# config/campaign_templates.yaml
+# Recurring campaign templates — select from the UI to pre-fill rows.
+# Each template has a display name and a fields dict matching the campaign columns.
+# All fields are optional; any missing field defaults to blank.
+
+templates:
+  - name: "Example — Weekly Deals Reminder"
+    fields:
+      campaign_name: "Weekly Deals Reminder"
+      theme: "weekly_deals"
+      title: "Your weekly deals are here!"
+      message: "Clip your weekly offers before they expire"
+      media_url: ""
+      pushsection: "deals"
+      param_q: "weekly-deals"
+      screentitle: "Weekly Deals"
+
+  # - name: "Example — FED Promo Push"
+  #   fields:
+  #     campaign_name: "FED Promo"
+  #     theme: "fed_promo"
+  #     title: "Don't miss this week's savings"
+  #     message: "Check out our featured deals"
+  #     media_url: ""
+  #     pushsection: "deals"
+  #     param_q: "fed"
+  #     screentitle: "Featured Deals"
+  #     division_ids: "19,20"
+  #     division_mode: "IN"
+  #     banners: "pine_and_peak,cedar_market"
+  #     banner_mode: "IN"

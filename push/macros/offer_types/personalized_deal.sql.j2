@@ -1,0 +1,30 @@
+{#
+  offer_type: PERSONALIZED DEAL
+  where_condition: cast(a.store_id AS string) = cc.store_id
+  reserved_aliases: bb, cc
+
+  Splits OFFER_ALLOCATION_HISTORY and coupon_store_validity into two
+  separate JOINs for efficiency.
+    bb — household filter from OFFER_ALLOCATION_HISTORY (joined on household_id)
+    cc — offer/store details from coupon_store_validity (joined on 1=1, filtered in WHERE)
+
+  Available variables:
+    {{ tables.offer_allocation_history }}         — OFFER_ALLOCATION_HISTORY table path
+    {{ tables.coupon_store_validity }}   — coupon_store_validity table path
+    {{ offer_clause }}                   — formatted offer ID filter (= 'X' or IN ('X','Y'))
+#}
+JOIN
+  (SELECT a.household_id, a.client_offer_id
+  FROM {{ tables.offer_allocation_history }} a
+  WHERE a.week_id = wk_id
+  AND a.client_offer_id {{ offer_clause }}
+  GROUP BY all
+  ) AS bb
+ON a.household_id = bb.household_id
+JOIN
+  (SELECT b.offer_id, b.catalog_offer_id, b.store_id, b.PROGRAM_CD
+  FROM {{ tables.coupon_store_validity }} b
+  WHERE b.offer_id {{ offer_clause }}
+  GROUP BY all
+  ) AS cc
+ON bb.client_offer_id = cc.offer_id

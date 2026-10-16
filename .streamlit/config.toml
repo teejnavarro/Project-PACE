@@ -1,0 +1,17 @@
+[server]
+# Auto-rerun the app whenever a source file changes on disk.
+# This makes UI/CSS updates visible immediately without a manual "Rerun".
+runOnSave = true
+
+[browser]
+gatherUsageStats = false
+
+# App is locked to dark mode. Base + custom palette below prevent Streamlit
+# from ever rendering the light theme, even if a user tries to switch it.
+[theme]
+base = "dark"
+primaryColor = "#579bfc"
+backgroundColor = "#0d1117"
+secondaryBackgroundColor = "#161b26"
+textColor = "#e6edf3"
+font = "sans serif"

@@ -1,0 +1,7 @@
+-- sql_templates/README.md
+-- Drop pre-built .sql files into this folder.
+-- They will appear in the Campaign Day Builder UI under
+-- "Load from SQL template library" for selection.
+--
+-- Each file is injected verbatim into the final export
+-- at its assigned priority position.

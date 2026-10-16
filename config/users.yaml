@@ -1,0 +1,8 @@
+# config/users.yaml
+# Role-based access settings for the Developer view.
+
+# Developer passphrase — SHA-256 hash of the plain-text passphrase.
+# To change: python -c "import hashlib; print(hashlib.sha256(b'NEW_PASSPHRASE').hexdigest())"
+# Demo plain-text: demo
+# Overridden at runtime by the PACE_DEV_PASSPHRASE_SHA256 environment variable when set.
+developer_passphrase_sha256: "2a97516c354b68848cdbd8f54a226a0a55b21ed138e207ad6c5cbb9c00aa5aea"

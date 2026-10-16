@@ -1,0 +1,61 @@
+{# macros/finalization.sql.j2
+   Renders: priority SELECT, redemption DELETE, CREATE OR REPLACE PUSH_Allocation_Final.
+   Required vars: tables (dict)
+#}
+
+SELECT * FROM {{ tables.push_priority_full }} ORDER BY 1 ASC;
+
+
+-- Remove households that already redeemed their offer
+DELETE FROM  {{ tables.push_allocation }}
+ WHERE (CAST(hhid as numeric), pushofferid||'-D') IN (SELECT AS STRUCT CAST(household_id AS numeric) ,
+                        client_offer_id
+						FROM {{ tables.redemption_events }}
+						WHERE txn_dte >= current_date-15
+						AND client_offer_id is not null
+						GROUP BY ALL
+						)
+;
+
+
+-- CREATE PUSH ALLOCATION FINAL TABLE
+CREATE OR REPLACE TABLE {{ tables.push_allocation_final }} as
+  SELECT CAST(wk_id AS numeric) AS week_id,
+  upper(substring(format_date('%A', CAST(campaign_id AS DATE)),1,3))  AS send_day,
+  CAST(campaign_id AS DATE) as SEND_DATE,
+  DIVISION_ID,
+  CAST(STORE_ID AS NUMERIC) AS STORE_ID,
+  pushcampaign as CAMPAIGN,
+  a.THEME,
+  UUID,
+  HHID,
+  os_cust_id,
+  pushofferid as OFFER_ID_01,
+  pushoffertype as OFFER_TYPE_01,
+  product as PRODUCT_ID_01,
+  SCHEDULED_TIME,
+  STORE_BANNER,
+  TITLE,
+  MESSAGE,
+  MEDIA_URL,
+  PUSHSECTION,
+  PARAM_Q,
+  SCREENTITLE,
+  GAMEID,
+  SEARCHTERM,
+  SELLER,
+  CATEGORY,
+  PROGRAM,
+  PAGENAME,
+  DATASOURCE,
+  MODELCONFIGID,
+  PARTNERID,
+  SUBTITLE,
+  AUTOIMAGE,
+  EVENTID,
+  CANONICALCAMPAIGNID
+  from (select * from {{ tables.push_allocation }} group by all ) a
+  join (select theme , priority from {{ tables.push_priority }} group by all ) b
+  ON a.theme = b.theme
+  WHERE a.campaign_id = CAST(start_date AS STRING)
+;

@@ -1,0 +1,6 @@
+# rcs/config/targeting.yaml
+# Optional reference lists for RCS targeting validation.
+# Currently unused — divisions.txt and banners.txt in reference_data/ are the active sources.
+
+divisions: []
+banners: []

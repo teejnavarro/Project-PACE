@@ -1,0 +1,16 @@
+-- macros/preamble.sql.j2
+-- Sets runtime variables and truncates the working table before campaign inserts.
+-- Required vars: wk_id (str, YYYYWW), send_date (str, YYYY-MM-DD), tables (dict)
+
+DECLARE wk_id BIGNUMERIC;
+DECLARE wkrun STRING;
+DECLARE start_date DATE;
+DECLARE Push_Campaign_Code STRING;
+
+SET wk_id = {{ wk_id }} ;
+SET wkrun = CONCAT('wk',RIGHT(CAST(wk_id AS STRING),2));
+SET start_date  = '{{ send_date }}';
+SET Push_Campaign_Code = CONCAT('pn_',wkrun,'_',SUBSTRING(CAST(wk_id AS STRING),1,4),'_',UPPER(SUBSTRING(FORMAT_DATE('%A', start_date),1,3)));
+
+SELECT wk_id,wkrun,start_date,Push_Campaign_Code,CURRENT_DATE,CURRENT_TIME;
+TRUNCATE TABLE {{ tables.push_allocation }};

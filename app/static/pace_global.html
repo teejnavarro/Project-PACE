@@ -1,0 +1,621 @@
+﻿    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    /* Streamlit Community Cloud deploy button — not viable for this app (see docs) */
+    [data-testid="stDeployButton"],
+    .stDeployButton,
+    [data-testid="stAppDeployButton"] { display: none !important; }
+
+    /* ============================================================
+       P·A·C·E — MODERN DESIGN SYSTEM
+       Purely visual layer. No functional selectors renamed.
+       ============================================================ */
+
+    :root {
+        --pace-bg:            #0d1117;
+        --pace-bg-elevated:   #161b26;
+        --pace-surface:       #1c2333;
+        --pace-surface-2:     #232b3d;
+        --pace-border:        #2a3245;
+        --pace-border-strong: #3a4560;
+        --pace-text:          #e6edf3;
+        --pace-text-muted:    #8b95a7;
+        --pace-primary:       #579bfc;
+        --pace-primary-hover: #6ba9ff;
+        --pace-success:       #22c55e;
+        --pace-success-hover: #16a34a;
+        --pace-danger:        #ef4444;
+        --pace-danger-hover:  #dc2626;
+        --pace-warning:       #f59e0b;
+        --pace-orange:        #fb923c;
+        --pace-orange-hover:  #f97316;
+        --pace-purple:        #a25ddc;
+        --pace-shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
+        --pace-shadow:    0 2px 8px rgba(0,0,0,0.35);
+        --pace-shadow-lg: 0 8px 24px rgba(0,0,0,0.40);
+        --pace-radius:    10px;
+        --pace-radius-lg: 14px;
+        --pace-transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    /* App is LOCKED to dark mode. If Streamlit's theme toggle flips the
+       data-theme attribute, force every token back to dark values. */
+    [data-theme="light"],
+    html[data-theme="light"],
+    .stApp[data-theme="light"],
+    body.light,
+    .stApp.light {
+        --pace-bg:            #0d1117 !important;
+        --pace-bg-elevated:   #161b26 !important;
+        --pace-surface:       #1c2333 !important;
+        --pace-surface-2:     #232b3d !important;
+        --pace-border:        #2a3245 !important;
+        --pace-border-strong: #3a4560 !important;
+        --pace-text:          #e6edf3 !important;
+        --pace-text-muted:    #8b95a7 !important;
+        background-color:     #0d1117 !important;
+        color:                #e6edf3 !important;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    html, body, [class*="css"], [data-testid="stAppViewContainer"],
+    [data-testid="stSidebar"], .stMarkdown, .stText, button, input, textarea, select {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Subtle app background gradient for depth */
+    [data-testid="stAppViewContainer"] > .main {
+        background:
+            radial-gradient(ellipse at top left, rgba(87, 155, 252, 0.05), transparent 45%),
+            radial-gradient(ellipse at bottom right, rgba(162, 93, 220, 0.04), transparent 45%);
+    }
+
+    /* Page headers — bold, tight tracking, accent underline */
+    h1, [data-testid="stHeader"] h1,
+    .stMarkdown h1 {
+        font-weight: 800 !important;
+        letter-spacing: -0.02em !important;
+        color: var(--pace-text) !important;
+    }
+    h2, .stMarkdown h2 {
+        font-weight: 700 !important;
+        letter-spacing: -0.01em !important;
+    }
+    /* Section subheaders → accent bar on the left */
+    h3, .stMarkdown h3 {
+        font-weight: 700 !important;
+        letter-spacing: -0.01em !important;
+        padding-left: 12px !important;
+        border-left: 3px solid var(--pace-primary) !important;
+        margin-top: 1.25rem !important;
+    }
+
+    /* ===== BUTTONS — refined pill style with hover lift ===== */
+    [data-testid="stBaseButton-primary"],
+    [data-testid="stBaseButton-secondary"],
+    [data-testid="stDownloadButton"] button {
+        border-radius: var(--pace-radius) !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.01em !important;
+        transition: var(--pace-transition) !important;
+        box-shadow: var(--pace-shadow-sm) !important;
+        white-space: nowrap !important;
+    }
+    /* Never wrap the label into multiple lines */
+    [data-testid="stBaseButton-primary"] > div,
+    [data-testid="stBaseButton-secondary"] > div,
+    [data-testid="stDownloadButton"] button > div,
+    [data-testid="stBaseButton-primary"] p,
+    [data-testid="stBaseButton-secondary"] p,
+    [data-testid="stDownloadButton"] button p {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+
+    /* Primary → vivid green (Save, Create, Submit, Generate) */
+    [data-testid="stBaseButton-primary"] {
+        background: linear-gradient(180deg, #26d367 0%, #1fb356 100%) !important;
+        border: 1px solid #1fa54d !important;
+        color: white !important;
+    }
+    [data-testid="stBaseButton-primary"]:hover {
+        background: linear-gradient(180deg, #2ee073 0%, #23c25e 100%) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35) !important;
+    }
+    [data-testid="stBaseButton-primary"]:active {
+        transform: translateY(0);
+        box-shadow: var(--pace-shadow-sm) !important;
+    }
+
+    /* Secondary → soft blue outline */
+    [data-testid="stBaseButton-secondary"] {
+        background: rgba(87, 155, 252, 0.06) !important;
+        border: 1px solid rgba(87, 155, 252, 0.55) !important;
+        color: var(--pace-primary) !important;
+    }
+    [data-testid="stBaseButton-secondary"]:hover {
+        background: var(--pace-primary) !important;
+        border-color: var(--pace-primary) !important;
+        color: white !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(87, 155, 252, 0.30) !important;
+    }
+
+    /* Red button markers (delete / remove actions) */
+    .btn-red { display: none !important; }
+    *:has(> .btn-red) + * button,
+    *:has(> .btn-red) + * [data-testid="stBaseButton-primary"],
+    *:has(> .btn-red) + * [data-testid="stBaseButton-secondary"],
+    *:has(> [data-testid="stMarkdown"] .btn-red) + * button {
+        background: linear-gradient(180deg, #f05252 0%, #dc2626 100%) !important;
+        border: 1px solid #b91c1c !important;
+        color: white !important;
+    }
+    *:has(> .btn-red) + * button:hover,
+    *:has(> [data-testid="stMarkdown"] .btn-red) + * button:hover {
+        background: linear-gradient(180deg, #f56565 0%, #e53e3e 100%) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35) !important;
+    }
+    /* Force red buttons in dashboard rows to the same compact size as siblings */
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] *:has(> .btn-red) + * button,
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] *:has(> [data-testid="stMarkdown"] .btn-red) + * button {
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 8px !important;
+        min-width: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+    }
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] *:has(> .btn-red) + * button p,
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] *:has(> [data-testid="stMarkdown"] .btn-red) + * button p {
+        font-size: 0.95em !important;
+        margin: 0 !important;
+        line-height: 1 !important;
+    }
+
+    /* Download button → warm orange */
+    [data-testid="stDownloadButton"] button {
+        background: linear-gradient(180deg, #fb923c 0%, #f97316 100%) !important;
+        border: 1px solid #ea580c !important;
+        color: white !important;
+    }
+    [data-testid="stDownloadButton"] button:hover {
+        background: linear-gradient(180deg, #fdba74 0%, #fb923c 100%) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(251, 146, 60, 0.35) !important;
+    }
+
+    /* ===== DASHBOARD TABLE HEADER — clean SaaS-style rule ===== */
+    .pace-dash-hdr-marker { display: none !important; }
+    [data-testid="stHorizontalBlock"]:has(.pace-dash-hdr-marker) {
+        border-bottom: 1px solid var(--pace-border) !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 8px !important;
+        padding-top: 2px !important;
+    }
+    .pace-dash-hdr-cell {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+    .pace-dash-hdr-label {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-weight: 600 !important;
+        font-size: 0.72em !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        color: #94a3b8 !important;
+        line-height: 1 !important;
+    }
+
+    /* ===== STATUS SELECTBOX (Monday-style pills) ===== */
+    .status-color { display: none !important; }
+
+    /* Type-to-search disabled inside status selectboxes */
+    *:has(> .status-color) + * [data-baseweb="select"] input,
+    *:has(> [data-testid="stMarkdown"] .status-color) + * [data-baseweb="select"] input {
+        pointer-events: none !important;
+        caret-color: transparent !important;
+    }
+
+    *:has(> .status-color) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-color) + * [data-baseweb="select"] {
+        border-radius: 999px !important;
+        border: none !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+        transition: var(--pace-transition) !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        font-size: 0.78em !important;
+        letter-spacing: 0.04em !important;
+    }
+    *:has(> .status-color) + * [data-baseweb="select"]:hover,
+    *:has(> [data-testid="stMarkdown"] .status-color) + * [data-baseweb="select"]:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+    }
+
+    *:has(> .status-draft) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-draft) + * [data-baseweb="select"]
+    { background-color: #6b7280 !important; }
+
+    *:has(> .status-pending-assets) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-pending-assets) + * [data-baseweb="select"]
+    { background-color: #e2445c !important; }
+
+    *:has(> .status-in-progress) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-in-progress) + * [data-baseweb="select"]
+    { background-color: #fdab3d !important; }
+
+    *:has(> .status-ready) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-ready) + * [data-baseweb="select"]
+    { background-color: #00c875 !important; }
+
+    *:has(> .status-submitted) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-submitted) + * [data-baseweb="select"]
+    { background-color: #579bfc !important; }
+
+    *:has(> .status-exported) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-exported) + * [data-baseweb="select"]
+    { background-color: #a25ddc !important; }
+
+    *:has(> .status-campaign-launched) + * [data-baseweb="select"],
+    *:has(> [data-testid="stMarkdown"] .status-campaign-launched) + * [data-baseweb="select"]
+    { background-color: #037f4c !important; }
+
+    *:has(> .status-color) + * [data-baseweb="select"] *,
+    *:has(> [data-testid="stMarkdown"] .status-color) + * [data-baseweb="select"] * {
+        color: white !important;
+        fill: white !important;
+        background-color: transparent !important;
+    }
+
+    /* Vertically center the pill text (fixes text riding high in the pill) */
+    *:has(> .status-color) + * [data-baseweb="select"] > div,
+    *:has(> [data-testid="stMarkdown"] .status-color) + * [data-baseweb="select"] > div {
+        display: flex !important;
+        align-items: center !important;
+        min-height: 34px !important;
+        line-height: 1 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    *:has(> .status-color) + * [data-baseweb="select"] [data-baseweb="tag"],
+    *:has(> [data-testid="stMarkdown"] .status-color) + * [data-baseweb="select"] [data-baseweb="tag"] {
+        display: flex !important;
+        align-items: center !important;
+        line-height: 1 !important;
+    }
+
+    /* ===== EXPANDERS — card feel with hover lift ===== */
+    [data-testid="stExpander"] {
+        border: 1px solid var(--pace-border) !important;
+        border-radius: var(--pace-radius) !important;
+        background: var(--pace-surface) !important;
+        box-shadow: var(--pace-shadow-sm) !important;
+        margin-bottom: 0.85rem !important;
+        transition: var(--pace-transition) !important;
+        overflow: hidden !important;
+    }
+    [data-testid="stExpander"]:hover {
+        border-color: var(--pace-border-strong) !important;
+        box-shadow: var(--pace-shadow) !important;
+    }
+    [data-testid="stExpander"] summary {
+        font-weight: 600 !important;
+        padding: 0.65rem 0.9rem !important;
+    }
+    [data-testid="stExpander"] summary:hover {
+        background: rgba(87, 155, 252, 0.05) !important;
+    }
+
+    /* ===== BORDERED CONTAINERS — softer surface ===== */
+    [data-testid="stVerticalBlockBorderWrapper"][data-test-has-border="true"] {
+        border: 1px solid var(--pace-border) !important;
+        border-radius: var(--pace-radius) !important;
+        background: var(--pace-surface) !important;
+        box-shadow: var(--pace-shadow-sm) !important;
+        padding: 1.1rem !important;
+    }
+
+    /* ===== INPUTS — softer edges, focus glow ===== */
+    [data-testid="stTextInput"] input,
+    [data-testid="stTextArea"] textarea,
+    [data-testid="stNumberInput"] input,
+    [data-testid="stDateInput"] input,
+    [data-baseweb="select"] > div {
+        border-radius: 8px !important;
+        transition: var(--pace-transition) !important;
+    }
+    [data-testid="stTextInput"] input:focus,
+    [data-testid="stTextArea"] textarea:focus,
+    [data-testid="stNumberInput"] input:focus {
+        border-color: var(--pace-primary) !important;
+        box-shadow: 0 0 0 3px rgba(87, 155, 252, 0.18) !important;
+    }
+
+    /* ===== ALERTS — modern info/warning/success/error strips ===== */
+    [data-testid="stAlert"] {
+        border-radius: var(--pace-radius) !important;
+        border-left-width: 4px !important;
+        box-shadow: var(--pace-shadow-sm) !important;
+    }
+
+    /* ===== CAPTIONS — muted, tighter ===== */
+    [data-testid="stCaptionContainer"], .stCaption, small {
+        color: var(--pace-text-muted) !important;
+    }
+
+    /* ===== DIVIDERS — subtle line ===== */
+    hr {
+        border: none !important;
+        border-top: 1px solid var(--pace-border) !important;
+        margin: 1.1rem 0 !important;
+    }
+
+    /* ===== TABS ===== */
+    [data-baseweb="tab-list"] {
+        gap: 4px !important;
+        border-bottom: 1px solid var(--pace-border) !important;
+    }
+    [data-baseweb="tab"] {
+        border-radius: 8px 8px 0 0 !important;
+        font-weight: 600 !important;
+        transition: var(--pace-transition) !important;
+    }
+    [data-baseweb="tab"]:hover {
+        background: rgba(87, 155, 252, 0.08) !important;
+    }
+    [aria-selected="true"][data-baseweb="tab"] {
+        color: var(--pace-primary) !important;
+    }
+
+    /* ===== TOOLBAR CSV EXPORT (no BOM = broken emojis) — hide ===== */
+    [data-testid='stElementToolbarButton']:has([data-testid='stElementToolbarButtonIcon']):nth-of-type(1) {
+        display: none !important;
+    }
+
+    /* ===== ROLE BADGES (legacy) ===== */
+    .role-badge-dev {
+        background: var(--pace-success); color: white; padding: 4px 12px;
+        border-radius: 999px; font-size: 0.85em; font-weight: 700;
+        display: inline-block; margin: 4px 0;
+        box-shadow: var(--pace-shadow-sm);
+    }
+    .role-badge-user {
+        background: var(--pace-primary); color: white; padding: 4px 12px;
+        border-radius: 999px; font-size: 0.85em; font-weight: 700;
+        display: inline-block; margin: 4px 0;
+        box-shadow: var(--pace-shadow-sm);
+    }
+
+    /* ===== DASHBOARD ROW COMPACTION (scoped to rows with status marker) =====
+       Every rule below is limited to horizontal blocks that contain a
+       .status-color marker so it can never affect targeting/form layouts. */
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stMarkdown"]:has(.status-color),
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stMarkdown"]:has(.btn-red) {
+        height: 0 !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] > div > [data-testid="stVerticalBlock"] {
+        gap: 0 !important;
+    }
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stSelectbox"] {
+        margin-top: -1rem !important;
+        margin-bottom: 0 !important;
+        padding-top: 0 !important;
+    }
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stBaseButton-secondary"],
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stBaseButton-primary"] {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+        min-width: 0 !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        line-height: 1 !important;
+    }
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stBaseButton-secondary"] p,
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stBaseButton-primary"] p {
+        font-size: 0.88em !important;
+        margin: 0 !important;
+        line-height: 1 !important;
+    }
+    [data-testid="stHorizontalBlock"]:has(.status-color) [data-testid="stColumn"] [data-testid="stMarkdown"] {
+        margin-bottom: 0 !important;
+    }
+
+    /* ===== SIDEBAR — refined navigation panel ===== */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #12172052 0%, #0d111700 100%),
+                    var(--pace-bg-elevated) !important;
+        border-right: 1px solid var(--pace-border) !important;
+    }
+    [data-testid="stSidebar"] hr {
+        margin: 0.85rem 0 !important;
+        opacity: 0.6;
+    }
+    [data-testid="stSidebar"] [data-testid="stBaseButton-primary"],
+    [data-testid="stSidebar"] [data-testid="stBaseButton-secondary"] {
+        font-size: 0.88em !important;
+        padding: 8px 10px !important;
+        font-weight: 600 !important;
+    }
+    /* Sidebar nav single-column buttons feel like nav items */
+    [data-testid="stSidebar"] [data-testid="stBaseButton-secondary"] {
+        text-align: left !important;
+        justify-content: flex-start !important;
+    }
+
+    /* ===== METRIC WIDGETS — cleaner numbers ===== */
+    [data-testid="stMetric"] {
+        background: var(--pace-bg-elevated);
+        border: 1px solid var(--pace-border);
+        border-radius: var(--pace-radius);
+        padding: 0.85rem 1rem;
+        box-shadow: var(--pace-shadow-sm);
+        transition: var(--pace-transition);
+    }
+    [data-testid="stMetric"]:hover {
+        border-color: var(--pace-border-strong);
+        box-shadow: var(--pace-shadow);
+    }
+    [data-testid="stMetricValue"] {
+        font-weight: 800 !important;
+        letter-spacing: -0.02em !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: var(--pace-text-muted) !important;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.72em !important;
+        font-weight: 600 !important;
+    }
+
+    /* ===== DATAFRAMES ===== */
+    [data-testid="stDataFrame"] {
+        border-radius: var(--pace-radius) !important;
+        overflow: hidden !important;
+        border: 1px solid var(--pace-border) !important;
+        box-shadow: var(--pace-shadow-sm) !important;
+    }
+
+    /* ===== CODE BLOCKS ===== */
+    [data-testid="stCode"] pre, .stCodeBlock pre {
+        border-radius: var(--pace-radius) !important;
+        border: 1px solid var(--pace-border) !important;
+    }
+
+    /* ===== SCROLLBAR — thinner, on-brand ===== */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+        background: var(--pace-border-strong);
+        border-radius: 5px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--pace-border-strong); background-clip: padding-box; }
+
+    /* ===== RCS card-editor tabs — spacing + tab-strip polish ===== */
+    /* Hide the marker element itself (zero height, no gap). */
+    div[data-testid="stElementContainer"]:has(> div > .rcs-card-tabs-scope) {
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    /* Add breathing room between the tab strip and each tab's bordered panel. */
+    div[data-testid="stElementContainer"]:has(> div > .rcs-card-tabs-scope) + div[data-testid="stElementContainer"] [data-baseweb="tab-panel"] {
+        padding-top: 10px !important;
+    }
+    /* Tab labels: slightly bolder + more comfortable padding */
+    div[data-testid="stElementContainer"]:has(> div > .rcs-card-tabs-scope) + div[data-testid="stElementContainer"] [data-baseweb="tab-list"] button {
+        font-weight: 600 !important;
+        padding: 8px 20px !important;
+        letter-spacing: 0.02em !important;
+    }
+    /* Tab strip: bottom border for visual separation from panel */
+    div[data-testid="stElementContainer"]:has(> div > .rcs-card-tabs-scope) + div[data-testid="stElementContainer"] [data-baseweb="tab-list"] {
+        border-bottom: 1px solid var(--pace-border) !important;
+        margin-bottom: 4px !important;
+    }
+    /* Active tab: highlighted with primary color underline */
+    div[data-testid="stElementContainer"]:has(> div > .rcs-card-tabs-scope) + div[data-testid="stElementContainer"] [data-baseweb="tab-list"] [aria-selected="true"] {
+        color: var(--pace-primary) !important;
+    }
+
+    /* ===== P·A·C·E LOGO — clickable home-link overlay ===== */
+    /* The logo HTML block sits above; an invisible full-size button is layered on top
+       so the entire logo area acts as a link back to the Dashboard. */
+    .pace-logo-block { position: relative; }
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) {
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+    /* The button container immediately after the logo markdown block */
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) + div[data-testid="stElementContainer"] {
+        margin-top: -108px !important;
+        height: 108px !important;
+        position: relative !important;
+        z-index: 50 !important;
+        margin-bottom: 4px !important;
+    }
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) + div[data-testid="stElementContainer"] .stButton,
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) + div[data-testid="stElementContainer"] .stButton > button {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: transparent !important;
+        width: 100% !important;
+        height: 108px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+    }
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) + div[data-testid="stElementContainer"] .stButton > button:hover,
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) + div[data-testid="stElementContainer"] .stButton > button:focus {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) + div[data-testid="stElementContainer"] .stButton > button > div,
+    div[data-testid="stElementContainer"]:has(> div > .pace-logo-btn-marker) + div[data-testid="stElementContainer"] .stButton > button p {
+        color: transparent !important;
+        opacity: 0 !important;
+    }
+    </style>
+    <script>
+    // Enforce numeric-only input on Week ID fields
+    (function() {
+        function enforceNumeric(input) {
+            if (input.dataset.numericEnforced) return;
+            input.dataset.numericEnforced = "1";
+            input.inputMode = "numeric";
+            input.pattern = "[0-9]*";
+            input.addEventListener("keydown", function(e) {
+                // Allow: backspace, delete, tab, escape, enter, arrows, home, end, select-all, copy, paste, cut
+                if ([8,9,13,27,46].indexOf(e.keyCode) !== -1 ||
+                    (e.keyCode >= 35 && e.keyCode <= 40) ||
+                    ((e.ctrlKey || e.metaKey) && [65,67,86,88].indexOf(e.keyCode) !== -1)) {
+                    return;
+                }
+                // Block anything that isn't a digit
+                if ((e.shiftKey || e.keyCode < 48 || e.keyCode > 57) &&
+                    (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+            input.addEventListener("input", function() {
+                var cleaned = this.value.replace(/[^0-9]/g, "").slice(0, 6);
+                if (this.value !== cleaned) {
+                    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                    nativeInputValueSetter.call(this, cleaned);
+                    this.dispatchEvent(new Event("input", {bubbles: true}));
+                }
+            });
+        }
+        function findAndEnforce() {
+            document.querySelectorAll('input[aria-label*="Week ID"]').forEach(enforceNumeric);
+        }
+        findAndEnforce();
+        new MutationObserver(findAndEnforce).observe(document.body, {childList: true, subtree: true});
+    })();
+    </script>

@@ -1,0 +1,78 @@
+{# rcs/macros/offer_types/choice.sql.j2
+   Renders one RCS CHOICE campaign INSERT.
+   Context vars:
+     - row (dict): campaign_name, theme, bu_cc_id, priority, fallback_message_body,
+                   to_app_store, canonical_campaign_id, cards[] (exactly 1), targeting_where
+     - tables (dict from rcs/config/tables.yaml)
+     - send_day_upper (str): MON/TUE/WED/THU/FRI/SAT/SUN
+   CHOICE = one message body with up to 4 buttons (title/value/sso_url/push_section).
+   No media (media_title/media_url are omitted from the SQL, not just blanked).
+
+   PRODUCTION-CRITICAL NOTES (do not remove):
+   - The MESSAGE_FOOTER_1 value ' Txt STOP 2 end' MUST keep its leading space.
+   - The CMPID CASE expression is included from _cmpid_case.sql.j2 and MUST NOT be edited.
+   - TEMPLATE = 'RCS_'||channelsubtype||'_THEME' is a fixed convention.
+   - The FALLBACK_MESSAGE_BODY must be prefixed with '[BANNER]: ' even if the CRF omits it.
+   - The AND s.phone_number NOT IN (...) dedupe is scoped to THIS script only.
+
+   RCS shares nothing at runtime with PUSH's campaign_insert.sql.j2 — it only inherits
+   the file layout convention (offer_types/*.sql.j2). Treat RCS templates independently.
+#}
+{% set target_table = tables.rcs_adhoc_base ~ '.' ~ send_day_upper ~ tables.rcs_adhoc_suffix -%}
+{% set c1 = row.cards[0] -%}
+{% set b1 = c1.buttons[0] -%}
+
+--======================================================================
+-- CHOICE :: {{ row.campaign_name }}
+--======================================================================
+--CHOICE TEMPLATE
+set BU_CC_ID = '{{ row.bu_cc_id | replace("'", "\\'") }}';
+set theme = '{{ row.theme | replace("'", "\\'") }}';
+set channelsubtype = 'CHOICE';
+set priority = {{ row.priority }};
+
+{{ row.targeting_notes_comment }}INSERT INTO {{ target_table }}
+(WEEK_ID,SEND_DAY,SEND_DATE,HOUSEHOLD_ID,RETAIL_CUSTOMER_UUID,PHONE_NUMBER,CMPID,STORE_BANNER,TEMPLATE,PRIORITY,THEME,STORE_ID,DIVISION_ID,SEND_DATE_TIME,CHANNEL,CHANNEL_SUB_TYPE,TIMEZONE,MESSAGE_HEADER_1,MESSAGE_FOOTER_1,MESSAGE_BODY_1,FIRST_BUTTON_TITLE_1,FIRST_BUTTON_VALUE_1,FIRST_BUTTON_SSO_URL_1,FIRST_BUTTON_PUSH_SECTION_1,FALLBACK_MESSAGE_BODY,TO_APP_STORE,STORE_STATE,CANONICALCAMPAIGNID)
+SELECT
+  weekid AS week_id, --not part of file output table but required
+  sendday AS send_day, --not part of file output table but required
+  senddate AS send_date, --not part of file output table but required
+  s.HOUSEHOLD_ID,
+  s.RETAIL_CUSTOMER_UUID,
+  s.PHONE_NUMBER, -- NEVER change the CMPID case statement on the row below
+  {% include '_cmpid_case.sql.j2' %},
+  s.STORE_BANNER,
+'RCS_'||channelsubtype||'_THEME' AS TEMPLATE, --never change this
+  priority AS PRIORITY,
+  theme as THEME,
+  s.STORE_ID,
+  s.DIVISION_ID,
+CASE WHEN senddate IS NOT NULL AND default_send_time IS NOT NULL THEN DATETIME(senddate, CAST(default_send_time AS TIME)) ELSE NULL END AS SEND_DATE_TIME, --NEVER CHANGE THIS CASE STATEMENT
+'RCS' AS CHANNEL, --never change this
+  channelsubtype AS CHANNEL_SUB_TYPE,
+  s.TIMEZONE,'' AS MESSAGE_HEADER_1, --leave these two columns together
+
+--CARD 1
+' Txt STOP 2 end' AS MESSAGE_FOOTER_1, --never change this including the extra space in the front
+'{{ c1.body | replace("'", "\\'") }}' AS MESSAGE_BODY_1,
+'{{ b1.title | default('', true) | replace("'", "\\'") }}' AS FIRST_BUTTON_TITLE_1,
+{{ b1._sql_value }} AS FIRST_BUTTON_VALUE_1,
+{{ b1._sql_sso_url }} AS FIRST_BUTTON_SSO_URL_1,
+'{{ b1.push_section | default('', true) | replace("'", "\\'") }}' AS FIRST_BUTTON_PUSH_SECTION_1,
+
+--include the [BANNER] placeholder even if the CRF doesn't include it
+'[BANNER]: {{ row.fallback_message_body | default('', true) | replace("'", "\\'") }}' AS FALLBACK_MESSAGE_BODY,
+{{ 'TRUE' if row.to_app_store else 'FALSE' }} as TO_APP_STORE, --default is 'false'
+STORE_STATE,
+'{{ row.canonical_campaign_id | default('', true) | replace("'", "\\'") }}' AS CANONICALCAMPAIGNID
+
+--Tables
+FROM {{ tables.sms_population }} s
+{% if row.custom_joins_sql %}{{ row.custom_joins_sql }}
+{% endif %}WHERE {{ row.targeting_where }}
+
+--Not in the same day's send (this script only)
+AND s.phone_number NOT IN (SELECT phone_number FROM {{ target_table }} GROUP BY ALL)
+GROUP BY ALL
+;
+

@@ -1,0 +1,301 @@
+# Emoji Repository for PUSH Campaign Builder
+# Organized by category for quick lookup.
+# Each entry: { name: display_name, char: emoji_character }
+# Add new emojis to any category or create new categories as needed.
+
+categories:
+
+  # ── Celebrations & Events ──
+  celebrations:
+    - { name: "party popper", char: "🎉" }
+    - { name: "confetti ball", char: "🎊" }
+    - { name: "tada", char: "🎉" }
+    - { name: "balloon", char: "🎈" }
+    - { name: "sparkles", char: "✨" }
+    - { name: "glowing star", char: "🌟" }
+    - { name: "star", char: "⭐" }
+    - { name: "star struck", char: "🤩" }
+    - { name: "partying face", char: "🥳" }
+    - { name: "fireworks", char: "🎆" }
+    - { name: "sparkler", char: "🎇" }
+    - { name: "trophy", char: "🏆" }
+    - { name: "medal", char: "🏅" }
+    - { name: "crown", char: "👑" }
+    - { name: "gift", char: "🎁" }
+    - { name: "ribbon", char: "🎀" }
+    - { name: "wrapped gift", char: "🎁" }
+
+  # ── Food & Drink ──
+  food_drink:
+    - { name: "wine glass", char: "🍷" }
+    - { name: "beer", char: "🍺" }
+    - { name: "champagne", char: "🍾" }
+    - { name: "cocktail", char: "🍸" }
+    - { name: "tropical drink", char: "🍹" }
+    - { name: "coffee", char: "☕" }
+    - { name: "pizza", char: "🍕" }
+    - { name: "hamburger", char: "🍔" }
+    - { name: "taco", char: "🌮" }
+    - { name: "burrito", char: "🌯" }
+    - { name: "hot dog", char: "🌭" }
+    - { name: "popcorn", char: "🍿" }
+    - { name: "ice cream", char: "🍦" }
+    - { name: "cake", char: "🎂" }
+    - { name: "cookie", char: "🍪" }
+    - { name: "donut", char: "🍩" }
+    - { name: "chocolate bar", char: "🍫" }
+    - { name: "candy", char: "🍬" }
+    - { name: "apple", char: "🍎" }
+    - { name: "green apple", char: "🍏" }
+    - { name: "banana", char: "🍌" }
+    - { name: "grapes", char: "🍇" }
+    - { name: "strawberry", char: "🍓" }
+    - { name: "watermelon", char: "🍉" }
+    - { name: "avocado", char: "🥑" }
+    - { name: "broccoli", char: "🥦" }
+    - { name: "carrot", char: "🥕" }
+    - { name: "corn", char: "🌽" }
+    - { name: "salad", char: "🥗" }
+    - { name: "meat on bone", char: "🍖" }
+    - { name: "cut of meat", char: "🥩" }
+    - { name: "cooking", char: "🍳" }
+    - { name: "fork and knife", char: "🍴" }
+    - { name: "plate with cutlery", char: "🍽️" }
+    - { name: "bread", char: "🍞" }
+    - { name: "cheese", char: "🧀" }
+    - { name: "egg", char: "🥚" }
+    - { name: "milk", char: "🥛" }
+    - { name: "butter", char: "🧈" }
+    - { name: "honey pot", char: "🍯" }
+    - { name: "lollipop", char: "🍭" }
+    - { name: "cupcake", char: "🧁" }
+    - { name: "pie", char: "🥧" }
+    - { name: "shrimp", char: "🦐" }
+    - { name: "lobster", char: "🦞" }
+    - { name: "sushi", char: "🍣" }
+
+  # ── Shopping & Money ──
+  shopping:
+    - { name: "money bag", char: "💰" }
+    - { name: "money with wings", char: "💸" }
+    - { name: "dollar", char: "💵" }
+    - { name: "credit card", char: "💳" }
+    - { name: "shopping cart", char: "🛒" }
+    - { name: "shopping bags", char: "🛍️" }
+    - { name: "receipt", char: "🧾" }
+    - { name: "tag", char: "🏷️" }
+    - { name: "percent", char: "%" }
+    - { name: "heavy dollar sign", char: "💲" }
+    - { name: "coin", char: "🪙" }
+    - { name: "gem stone", char: "💎" }
+    - { name: "package", char: "📦" }
+    - { name: "truck", char: "🚚" }
+
+  # ── Hands & Gestures ──
+  gestures:
+    - { name: "thumbs up", char: "👍" }
+    - { name: "thumbs down", char: "👎" }
+    - { name: "clapping", char: "👏" }
+    - { name: "raised hands", char: "🙌" }
+    - { name: "pray / thank you", char: "🙏" }
+    - { name: "handshake", char: "🤝" }
+    - { name: "wave", char: "👋" }
+    - { name: "pointing right", char: "👉" }
+    - { name: "pointing down", char: "👇" }
+    - { name: "ok hand", char: "👌" }
+    - { name: "muscle", char: "💪" }
+    - { name: "crossed fingers", char: "🤞" }
+    - { name: "love you gesture", char: "🤟" }
+    - { name: "open hands", char: "👐" }
+    - { name: "palms up", char: "🤲" }
+    - { name: "eyes", char: "👀" }
+
+  # ── Faces & Emotions ──
+  faces:
+    - { name: "smiling face", char: "😊" }
+    - { name: "grinning", char: "😀" }
+    - { name: "grin", char: "😁" }
+    - { name: "joy / tears of joy", char: "😂" }
+    - { name: "heart eyes", char: "😍" }
+    - { name: "wink", char: "😉" }
+    - { name: "blowing kiss", char: "😘" }
+    - { name: "yum", char: "😋" }
+    - { name: "sunglasses", char: "😎" }
+    - { name: "thinking", char: "🤔" }
+    - { name: "shush", char: "🤫" }
+    - { name: "mind blown", char: "🤯" }
+    - { name: "fire", char: "🔥" }
+    - { name: "100", char: "💯" }
+    - { name: "money mouth", char: "🤑" }
+    - { name: "drooling", char: "🤤" }
+    - { name: "pleading face", char: "🥺" }
+    - { name: "relieved", char: "😌" }
+
+  # ── Hearts & Love ──
+  hearts:
+    - { name: "red heart", char: "❤️" }
+    - { name: "orange heart", char: "🧡" }
+    - { name: "yellow heart", char: "💛" }
+    - { name: "green heart", char: "💚" }
+    - { name: "blue heart", char: "💙" }
+    - { name: "purple heart", char: "💜" }
+    - { name: "sparkling heart", char: "💖" }
+    - { name: "growing heart", char: "💗" }
+    - { name: "two hearts", char: "💕" }
+    - { name: "heart exclamation", char: "❣️" }
+    - { name: "broken heart", char: "💔" }
+    - { name: "heart on fire", char: "❤️‍🔥" }
+    - { name: "white heart", char: "🤍" }
+    - { name: "black heart", char: "🖤" }
+
+  # ── Nature & Weather ──
+  nature:
+    - { name: "sun", char: "☀️" }
+    - { name: "rainbow", char: "🌈" }
+    - { name: "cloud", char: "☁️" }
+    - { name: "snowflake", char: "❄️" }
+    - { name: "snowman", char: "⛄" }
+    - { name: "rain", char: "🌧️" }
+    - { name: "umbrella", char: "☂️" }
+    - { name: "cherry blossom", char: "🌸" }
+    - { name: "flower", char: "🌺" }
+    - { name: "sunflower", char: "🌻" }
+    - { name: "tulip", char: "🌷" }
+    - { name: "rose", char: "🌹" }
+    - { name: "four leaf clover", char: "🍀" }
+    - { name: "herb", char: "🌿" }
+    - { name: "seedling", char: "🌱" }
+    - { name: "tree", char: "🌳" }
+    - { name: "palm tree", char: "🌴" }
+    - { name: "fallen leaf", char: "🍂" }
+    - { name: "maple leaf", char: "🍁" }
+    - { name: "leaves", char: "🍃" }
+    - { name: "fire", char: "🔥" }
+    - { name: "water wave", char: "🌊" }
+    - { name: "earth globe", char: "🌎" }
+
+  # ── Holidays & Seasons ──
+  holidays:
+    - { name: "jack o lantern", char: "🎃" }
+    - { name: "christmas tree", char: "🎄" }
+    - { name: "santa", char: "🎅" }
+    - { name: "snowman", char: "☃️" }
+    - { name: "fireworks", char: "🎆" }
+    - { name: "sparkler", char: "🎇" }
+    - { name: "heart", char: "❤️" }
+    - { name: "cupid", char: "💘" }
+    - { name: "shamrock", char: "☘️" }
+    - { name: "egg", char: "🥚" }
+    - { name: "rabbit", char: "🐰" }
+    - { name: "chick", char: "🐣" }
+    - { name: "flag (US)", char: "🇺🇸" }
+    - { name: "turkey", char: "🦃" }
+    - { name: "menorah", char: "🕎" }
+    - { name: "candle", char: "🕯️" }
+    - { name: "pumpkin", char: "🎃" }
+
+  # ── Symbols & Alerts ──
+  symbols:
+    - { name: "check mark", char: "✅" }
+    - { name: "cross mark", char: "❌" }
+    - { name: "warning", char: "⚠️" }
+    - { name: "bell", char: "🔔" }
+    - { name: "megaphone", char: "📣" }
+    - { name: "loudspeaker", char: "📢" }
+    - { name: "speech balloon", char: "💬" }
+    - { name: "thought balloon", char: "💭" }
+    - { name: "exclamation", char: "❗" }
+    - { name: "question", char: "❓" }
+    - { name: "new", char: "🆕" }
+    - { name: "free", char: "🆓" }
+    - { name: "soon", char: "🔜" }
+    - { name: "top", char: "🔝" }
+    - { name: "up arrow", char: "⬆️" }
+    - { name: "right arrow", char: "➡️" }
+    - { name: "rotating light", char: "🚨" }
+    - { name: "pin", char: "📌" }
+    - { name: "pushpin", char: "📍" }
+    - { name: "link", char: "🔗" }
+    - { name: "lock", char: "🔒" }
+    - { name: "key", char: "🔑" }
+    - { name: "bulb / idea", char: "💡" }
+    - { name: "mag glass", char: "🔍" }
+    - { name: "hourglass", char: "⏳" }
+    - { name: "clock", char: "🕐" }
+    - { name: "alarm clock", char: "⏰" }
+    - { name: "calendar", char: "📅" }
+    - { name: "memo", char: "📝" }
+    - { name: "envelope", char: "✉️" }
+    - { name: "inbox", char: "📥" }
+    - { name: "chart increasing", char: "📈" }
+    - { name: "rocket", char: "🚀" }
+    - { name: "zap / lightning", char: "⚡" }
+    - { name: "boom / collision", char: "💥" }
+    - { name: "dizzy", char: "💫" }
+
+  # ── Health & Wellness ──
+  health:
+    - { name: "green salad", char: "🥗" }
+    - { name: "apple", char: "🍎" }
+    - { name: "flexed biceps", char: "💪" }
+    - { name: "running", char: "🏃" }
+    - { name: "yoga", char: "🧘" }
+    - { name: "pill", char: "💊" }
+    - { name: "stethoscope", char: "🩺" }
+    - { name: "heart", char: "❤️" }
+    - { name: "sparkling heart", char: "💖" }
+    - { name: "bandage", char: "🩹" }
+    - { name: "drop of blood", char: "🩸" }
+
+  # ── Animals ──
+  animals:
+    - { name: "dog", char: "🐶" }
+    - { name: "cat", char: "🐱" }
+    - { name: "bear", char: "🐻" }
+    - { name: "panda", char: "🐼" }
+    - { name: "cow", char: "🐄" }
+    - { name: "chicken", char: "🐔" }
+    - { name: "pig", char: "🐷" }
+    - { name: "butterfly", char: "🦋" }
+    - { name: "bee", char: "🐝" }
+    - { name: "ladybug", char: "🐞" }
+    - { name: "unicorn", char: "🦄" }
+    - { name: "fish", char: "🐟" }
+    - { name: "crab", char: "🦀" }
+    - { name: "lobster", char: "🦞" }
+    - { name: "whale", char: "🐳" }
+    - { name: "dolphin", char: "🐬" }
+
+  # ── Sports & Activities ──
+  sports:
+    - { name: "soccer", char: "⚽" }
+    - { name: "basketball", char: "🏀" }
+    - { name: "football", char: "🏈" }
+    - { name: "baseball", char: "⚾" }
+    - { name: "tennis", char: "🎾" }
+    - { name: "golf", char: "⛳" }
+    - { name: "bowling", char: "🎳" }
+    - { name: "bike", char: "🚲" }
+    - { name: "camping", char: "🏕️" }
+    - { name: "mountain", char: "⛰️" }
+    - { name: "fishing", char: "🎣" }
+    - { name: "video game", char: "🎮" }
+    - { name: "dart", char: "🎯" }
+
+  # ── Home & Family ──
+  home_family:
+    - { name: "house", char: "🏠" }
+    - { name: "house with garden", char: "🏡" }
+    - { name: "family", char: "👨‍👩‍👧‍👦" }
+    - { name: "baby", char: "👶" }
+    - { name: "woman", char: "👩" }
+    - { name: "man", char: "👨" }
+    - { name: "older person", char: "🧓" }
+    - { name: "dog face", char: "🐶" }
+    - { name: "cat face", char: "🐱" }
+    - { name: "couch and lamp", char: "🛋️" }
+    - { name: "bed", char: "🛏️" }
+    - { name: "bathtub", char: "🛁" }
+    - { name: "broom", char: "🧹" }
+    - { name: "soap", char: "🧼" }
+    - { name: "sponge", char: "🧽" }

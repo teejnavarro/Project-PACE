@@ -1,0 +1,33 @@
+# rcs/config/tables.yaml
+# BigQuery table paths for RCS campaign generation.
+# Mirrors push/config/tables.yaml shape so app/ui.py's load_tables() works identically.
+
+env: prod
+
+tables:
+  # Target output table — the day prefix (MON/TUE/WED/THU/FRI/SAT/SUN) is prepended
+  # at render time from the campaign's send_date.
+  rcs_adhoc_base: "orchard-demo.messaging"
+  rcs_adhoc_suffix: "_RCS_Adhoc"
+
+  # Source population
+  sms_population: "orchard-demo.audience.eligible_message_audience"
+
+  # Downstream delivery table (finalization INSERT)
+  outbound_message_log: "orchard-demo.messaging.outbound_message_log"
+
+  # Supporting tables used by the finalization and reporting steps.
+  rcs_archive: "orchard-demo.messaging.rcs_message_archive"
+  send_day_blocker: "orchard-demo.audience.message_send_restrictions"
+  email_versions: "orchard-demo.customer.email_versions"
+
+  # Global opt-out lookup for finalization DELETE
+  customer_preference_opt_choice: "orchard-demo.customer.messaging_preferences"
+
+  # Text count approval table (used for re-run cleanup — commented in template)
+  text_count_approval: "orchard-demo.messaging.message_count_approvals"
+
+# RCS-specific runtime constants used by macros
+runtime:
+  # UUID for global opt-out preference in CUSTOMER_PREFERENCE_OPT_CHOICE
+  goo_preference_definition_id: "72b69367-0b3c-4f90-b373-b544024c7109"

@@ -1,0 +1,26 @@
+{# rcs/macros/preamble.sql.j2
+   Sets runtime variables and truncates the day-prefixed target table.
+   Required context vars:
+     - wk_id (numeric, e.g. 202633)
+     - send_date (str, YYYY-MM-DD)
+     - send_day_upper (str, MON/TUE/WED/THU/FRI/SAT/SUN)
+     - tables (dict from rcs/config/tables.yaml)
+   The target table = "{rcs_adhoc_base}.{send_day_upper}{rcs_adhoc_suffix}"
+
+   RCS shares nothing at runtime with PUSH's preamble.sql.j2. The two channels only
+   share the same file layout convention (preamble/campaign_insert/finalization).
+   Treat RCS templates independently — do not port PUSH-only patterns here.
+#}
+declare weekid numeric;
+declare senddate date;
+declare sendday string;
+declare BU_CC_ID string; -- represented as BU-CC-ID in the campaign request form
+declare theme string;
+declare channelsubtype string;
+declare priority INT64;
+
+set weekid = {{ wk_id }};
+set senddate = '{{ send_date }}';
+set sendday = UPPER(FORMAT_DATE('%a', senddate));
+
+TRUNCATE TABLE {{ tables.rcs_adhoc_base }}.{{ send_day_upper }}{{ tables.rcs_adhoc_suffix }};

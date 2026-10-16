@@ -1,0 +1,12 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 160
+extend-exclude = ["archive", ".venv"]
+
+[tool.ruff.lint]
+# Keep the gate minimal and signal-rich: fatal bugs and unused imports only.
+# Stylistic rules are deliberately off so the existing codebase passes without churn.
+select = ["E9", "F63", "F7", "F82", "F401"]

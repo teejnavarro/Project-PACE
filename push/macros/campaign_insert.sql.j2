@@ -1,0 +1,71 @@
+{# macros/campaign_insert.sql.j2
+   Renders one campaign INSERT block.
+   Context vars: tables (dict), wk_id, send_date, optional_cols (list from optional_columns.yaml)
+   NOTE: Source-table columns and JOIN/WHERE logic are FIXED. Only literal fields
+         are parameterized from the form. Optional loop-managed columns are driven
+         by config/optional_columns.yaml — add a new column there to extend the SELECT list.
+#}
+
+--======================================================================
+-- {{ campaign_name }}
+--======================================================================
+INSERT INTO {{ tables.push_allocation }}
+SELECT a.* FROM
+(SELECT DISTINCT
+ cast(a.division_id as numeric)
+,a.store_banner
+,cast(a.store_id as string)
+,cast(a.household_id as numeric) AS HHID
+,a.OS_CUST_ID
+,Push_Campaign_Code AS PUSHCAMPAIGN
+,'{{ title | replace("'", "\\'") }}' AS title
+,'{{ message | replace("'", "\\'") }}' AS message
+,'{{ media_url | default('', true) | replace("'", "\\'") }}' AS media_url
+,'{{ media_type | default('', true) }}' AS media_type
+,'{{ pushlinks | default('', true) }}' AS pushlinks
+,'{{ theme | replace("'", "\\'") }}' AS theme
+{% if offer_type_value in ('PUSHSECTION', '') -%}
+,'' AS pushoffertype
+,NULL AS pushofferid
+{% else -%}
+,PROGRAM_CD AS pushoffertype
+,catalog_offer_id AS pushofferid
+{% endif -%}
+,cast(start_date as string) AS campaign_id
+,'{{ pushsection | default('', true) | replace("'", "\\'") }}' AS PUSHSECTION
+,a.RETAIL_CUSTOMER_UUID AS UUID
+,cast(a.scheduled_time as string)
+{% for col in optional_cols %}
+{% if col.sql_type == 'static' %}
+, {{ col.sql_expr }}
+{% elif col.sql_type == 'bool' %}
+{% if col.value is none or col.value == '' %}
+,CAST(NULL as BOOL) as {{ col.alias }}
+{% elif col.value %}
+,CAST(TRUE as BOOL) as {{ col.alias }}
+{% else %}
+,CAST(FALSE as BOOL) as {{ col.alias }}
+{% endif %}
+{% else %}
+,'{{ col.value }}' as {{ col.alias }}
+{% endif %}
+{% endfor %}
+FROM {{ tables.eligible_push_audience }} a
+{% if targeting_notes_comment %}
+{{ targeting_notes_comment }}
+{%- endif %}
+{% if offer_join %}
+{{ offer_join }}
+{% endif %}
+{% if custom_joins %}
+{{ custom_joins }}
+{% endif %}
+{% if where_clause %}
+{{ where_clause }}
+{% endif %}
+GROUP BY all
+) a
+WHERE HHID NOT IN
+  (SELECT HHID
+  FROM {{ tables.push_allocation }})
+;

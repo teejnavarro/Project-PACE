@@ -1,0 +1,29 @@
+# config/tables.yaml
+# BigQuery dataset/table paths. Switch env to toggle prod ↔ dev paths.
+env: prod
+
+datasets:
+  prod:
+    push_allocation: orchard-demo.messaging.push_allocation
+    push_priority: orchard-demo.messaging.push_priority
+    push_priority_full: orchard-demo.messaging.push_priority_full
+    push_allocation_final: orchard-demo.messaging.push_allocation_final
+    push_allocation_final_archive: orchard-demo.messaging.push_allocation_archive
+    eligible_push_audience: orchard-demo.audience.eligible_push_audience
+    redemption_events: orchard-demo.customer.redemption_events
+    offer_allocation_history: orchard-demo.offers.offer_allocation_history
+    coupon_store_validity: orchard-demo.offers.coupon_eligibility
+    offer_catalog: orchard-demo.offers.offer_catalog
+    consolidated_offer_bank: orchard-demo.offers.consolidated_offer_bank
+  dev:
+    push_allocation: orchard-demo-dev.messaging.push_allocation
+    push_priority: orchard-demo-dev.messaging.push_priority
+    push_priority_full: orchard-demo-dev.messaging.push_priority_full
+    push_allocation_final: orchard-demo-dev.messaging.push_allocation_final
+    push_allocation_final_archive: orchard-demo-dev.messaging.push_allocation_archive
+    eligible_push_audience: orchard-demo-dev.audience.eligible_push_audience
+    redemption_events: orchard-demo-dev.customer.redemption_events
+    offer_allocation_history: orchard-demo-dev.offers.offer_allocation_history
+    coupon_store_validity: orchard-demo-dev.offers.coupon_eligibility
+    offer_catalog: orchard-demo-dev.offers.offer_catalog
+    consolidated_offer_bank: orchard-demo-dev.offers.consolidated_offer_bank

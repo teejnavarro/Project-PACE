@@ -1,0 +1,13 @@
+{#
+  offer_type: PUSHSECTION
+  where_condition:
+  reserved_aliases:
+
+  PUSHSECTION (and empty offer type) produces NO offer JOIN and NO offer
+  WHERE condition. The pushoffertype and pushofferid columns are set to
+  '' and NULL respectively in macros/campaign_insert.sql.j2.
+
+  This file is intentionally empty below the header. If you need a JOIN
+  for PUSHSECTION rows in the future, add the SQL template below using
+  the same Jinja2 syntax as the other offer type files.
+#}

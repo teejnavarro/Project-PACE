@@ -1,0 +1,26 @@
+# config/targeting.yaml
+# Optional lookup lists for targeting validation.
+# If populated, the UI will show known values as help text in columns.
+# Users can still enter free-text values not listed here.
+
+divisions:
+  # - 19
+  # - 20
+  # - 27
+  # - 30
+  # - 33
+  # - 34
+
+banners:
+  # - cedar_market
+  # - blueharbor
+  # - redwood_fresh
+  # - meadowlane
+  # - pine_and_peak
+  # - coastwise
+  # - willow_market
+  # - brightfield
+  # - foxglove_foods
+  # - maple_street
+  # - granite_grocer
+  # - orchard_and_tide
